@@ -1,14 +1,9 @@
 # Security headers (applied by Cloudflare to all routes)
+# NOTE: do NOT set Cross-Origin-Opener-Policy here — a stricter COOP than the
+# browser default ("unsafe-none") severs the Google Sign-In popup's connection
+# back to the page and breaks login. Leaving COOP unset is what works.
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
-
-# Pages that use Google Sign-In need to allow the auth popup to talk back.
-# Without this, Chrome logs "Cross-Origin-Opener-Policy ... would block the
-# window.postMessage call" and the popup flow can misbehave.
-/admin/*
-  Cross-Origin-Opener-Policy: same-origin-allow-popups
-/me/*
-  Cross-Origin-Opener-Policy: same-origin-allow-popups
