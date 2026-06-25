@@ -85,7 +85,7 @@ a { color: var(--brand); }
 /* ---- Job grid ---- */
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
 .filters select, .filters input {
-  padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 14px;
+  padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 16px;
 }
 .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; align-items: start; }
 .job-card {
@@ -129,7 +129,7 @@ a { color: var(--brand); }
 .field label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
 .field .req { color: var(--danger); }
 .field input, .field select, .field textarea {
-  width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 15px; font-family: inherit; background: #fff;
+  width: 100%; padding: 12px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; font-family: inherit; background: #fff;
 }
 .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--brand-light); border-color: var(--brand); }
 .field .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
@@ -177,7 +177,24 @@ table.data tr:hover td { background: #fafdfe; }
 /* ---- Footer ---- */
 .site-footer { padding: 28px 0; color: var(--muted); font-size: 13px; text-align: center; border-top: 1px solid var(--line); margin-top: 40px; }
 
-@media (max-width: 560px) {
+@media (max-width: 640px) {
   .field-row { grid-template-columns: 1fr; }
-  .nav-links a { margin-left: 12px; font-size: 14px; }
+  .hero { padding: 40px 0; }
+  .section { padding: 32px 0; }
+  .filters { gap: 8px; }
+  .filters input[type="search"] { flex: 1 1 100%; }
+  .form-wrap { padding: 22px 18px; margin: 18px auto; }
+  .job-modal { padding: 22px 18px; }
+  .job-modal .modal-title { font-size: 22px; }
+  .job-modal .modal-cta { bottom: -22px; }
+  /* Tap targets: comfortable nav + buttons */
+  .nav-links a { margin-left: 14px; font-size: 15px; }
+  .btn { padding: 12px 20px; }
+}
+
+/* Very small phones: drop the brand tag so the header never crowds */
+@media (max-width: 440px) {
+  .brand .brand-tag { display: none; }
+  .brand-logo { height: 36px; }
+  .site-header .container { height: 58px; }
 }
