@@ -367,6 +367,26 @@ window.SFC_getUser = function () {
   try { return JSON.parse(localStorage.getItem("sfc_user") || "null"); } catch (e) { return null; }
 };
 
+/* Short-lived Google ID token cache so returning users (within the token's
+   ~1h lifetime) resume without a fresh sign-in prompt. Re-verified server-side
+   on every request, and never used past its own `exp`. */
+window.SFC_setToken = function (token) {
+  try {
+    var exp = JSON.parse(atob(token.split(".")[1])).exp;   // seconds since epoch
+    localStorage.setItem("sfc_token", JSON.stringify({ t: token, exp: exp }));
+  } catch (e) {}
+};
+window.SFC_getToken = function () {
+  try {
+    var o = JSON.parse(localStorage.getItem("sfc_token") || "null");
+    if (o && o.t && o.exp && (o.exp * 1000 - 60000) > Date.now()) return o.t;  // 60s safety margin
+  } catch (e) {}
+  return null;
+};
+window.SFC_clearToken = function () {
+  try { localStorage.removeItem("sfc_token"); } catch (e) {}
+};
+
 (function () {
   function paint() {
     var link = document.querySelector('.nav-links a[href="/me/"]');

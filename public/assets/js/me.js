@@ -4,9 +4,15 @@
   document.getElementById("year").textContent = new Date().getFullYear();
   var cfg = window.SFC_CONFIG || {};
   var idToken = null;
+  var usingSaved = false;
 
   var gate = document.getElementById("gate");
   var dash = document.getElementById("dash");
+
+  // Try the saved token FIRST so returning users never see a sign-in prompt
+  // (the token is valid ~1 hour and is re-verified server-side each request).
+  var saved = window.SFC_getToken && window.SFC_getToken();
+  if (saved) { idToken = saved; usingSaved = true; loadSpace(); }
 
   /* ---- Google Identity Services ---- */
   function initGoogle() {
@@ -14,11 +20,13 @@
     google.accounts.id.initialize({ client_id: cfg.GOOGLE_CLIENT_ID, callback: onCredential, auto_select: true });
     var btn = document.querySelector(".g_id_signin");
     if (btn) google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "filled_blue", shape: "pill" });
-    // Returning user on this device? Silently resume the session (no re-click).
-    if (window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
+    // No valid saved token but they've signed in before? Try a silent resume.
+    if (!saved && window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
   function onCredential(resp) {
     idToken = resp.credential;
+    usingSaved = false;
+    window.SFC_setToken && window.SFC_setToken(idToken);
     loadSpace();
   }
   var tries = 0;
@@ -30,6 +38,7 @@
     e.preventDefault();
     idToken = null;
     window.SFC_clearUser();
+    window.SFC_clearToken && window.SFC_clearToken();
     if (window.google) google.accounts.id.disableAutoSelect();
     location.href = "/";
   });
@@ -52,6 +61,12 @@
         showDash(res);
       })
       .catch(function (err) {
+        // A stale saved token just means "sign in again" — show the button, no scary error.
+        if (usingSaved) {
+          usingSaved = false;
+          window.SFC_clearToken && window.SFC_clearToken();
+          return;
+        }
         gate.querySelector(".sub").textContent = "Sorry, sign-in failed: " + err.message;
       });
   }

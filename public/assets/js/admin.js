@@ -27,22 +27,29 @@
     if (btn) {
       google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "outline", shape: "pill" });
     }
-    // Returning HR on this device? Resume silently.
-    if (window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
+    // No valid saved token but signed in before? Try a silent resume.
+    if (!window.SFC_getToken() && window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
 
   var currentName = "";
-  function onCredential(resp) {
-    idToken = resp.credential;
-    // Decode the email/name locally just for display; the BACKEND does real verification.
+  function adoptToken(token) {
+    idToken = token;
     try {
       var payload = JSON.parse(atob(idToken.split(".")[1]));
       currentEmail = payload.email;
       currentName = payload.name || "";
       window.SFC_setUser({ email: currentEmail, name: currentName, firstName: (currentName || "").split(" ")[0] });
     } catch (e) {}
+  }
+  function onCredential(resp) {
+    adoptToken(resp.credential);
+    window.SFC_setToken && window.SFC_setToken(idToken);   // remember for ~1h
     enterDashboard();
   }
+
+  // Resume immediately from a saved token so HR isn't re-prompted.
+  var savedToken = window.SFC_getToken && window.SFC_getToken();
+  if (savedToken) { adoptToken(savedToken); enterDashboard(); }
 
   // After Google sign-in, verify the email is allowlisted (server-side).
   // HR -> show the dashboard. Anyone else -> bounce back to the normal site,
