@@ -17,7 +17,7 @@ window.SFC_CONFIG = {
 
   // 3) Cloudflare Turnstile site key (anti-spam on the application form).
   //    Leave blank to disable the captcha. See docs/GOOGLE_SETUP.md step 7.
-  TURNSTILE_SITE_KEY: "",
+  TURNSTILE_SITE_KEY: "0x4AAAAAADqt2N8ZROtqGFeY",
 
   // Where applicants land after submitting (kept on-site).
   // (No edits needed.)
