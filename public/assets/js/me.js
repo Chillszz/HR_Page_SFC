@@ -9,10 +9,24 @@
   var gate = document.getElementById("gate");
   var dash = document.getElementById("dash");
 
+  // Sign-in UI states
+  function showSigning() {
+    var a = document.getElementById("signin-area"); if (a) a.classList.add("hidden");
+    document.getElementById("signing").classList.remove("hidden");
+    document.getElementById("gate-error").classList.add("hidden");
+  }
+  function showSignin(errMsg) {
+    var a = document.getElementById("signin-area"); if (a) a.classList.remove("hidden");
+    document.getElementById("signing").classList.add("hidden");
+    var e = document.getElementById("gate-error");
+    if (errMsg) { e.textContent = errMsg; e.classList.remove("hidden"); }
+    else { e.classList.add("hidden"); }
+  }
+
   // Try the saved token FIRST so returning users never see a sign-in prompt
   // (the token is valid ~1 hour and is re-verified server-side each request).
   var saved = window.SFC_getToken && window.SFC_getToken();
-  if (saved) { idToken = saved; usingSaved = true; loadSpace(); }
+  if (saved) { idToken = saved; usingSaved = true; showSigning(); loadSpace(); }
 
   /* ---- Google Identity Services ---- */
   function initGoogle() {
@@ -25,6 +39,7 @@
     idToken = resp.credential;
     usingSaved = false;
     window.SFC_setToken && window.SFC_setToken(idToken);
+    showSigning();
     loadSpace();
   }
   var tries = 0;
@@ -63,9 +78,10 @@
         if (usingSaved) {
           usingSaved = false;
           window.SFC_clearToken && window.SFC_clearToken();
+          showSignin();
           return;
         }
-        gate.querySelector(".sub").textContent = "Sorry, sign-in failed: " + err.message;
+        showSignin("Sorry, sign-in didn't work: " + err.message + " Please try again.");
       });
   }
 
@@ -74,9 +90,32 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   }
-  function statusClass(s) {
-    return ({ "New": "status-new", "In Review": "status-review", "Interview": "status-interview",
-      "Hired": "status-hired", "Rejected": "status-rejected" })[s] || "status-new";
+  // Map internal HR status -> friendly applicant-facing label + pill colour.
+  var STATUS = {
+    "New":       { label: "Submitted",       cls: "status-new" },
+    "In Review": { label: "In Review",       cls: "status-review" },
+    "Interview": { label: "First Interview", cls: "status-interview" },
+    "Hired":     { label: "Hired 🎉",        cls: "status-hired" },
+    "Rejected":  { label: "Not selected",    cls: "status-rejected" }
+  };
+  function statusInfo(s) { return STATUS[s] || STATUS["New"]; }
+
+  // Progress stepper: Submitted -> In Review -> First Interview -> Hired.
+  var STAGE_ORDER = ["New", "In Review", "Interview", "Hired"];
+  var STAGE_LABELS = ["Submitted", "In Review", "First Interview", "Hired"];
+  function stepperHtml(status) {
+    if (status === "Rejected") {
+      // Show the journey ended; mark the last reached point in red.
+      return '<div class="stages rejected">' + STAGE_LABELS.map(function (lab, i) {
+        return '<div class="stage' + (i === 0 ? " current" : "") + '"><span class="dot"></span>' +
+          (i === STAGE_LABELS.length - 1 ? "Not selected" : esc(lab)) + "</div>";
+      }).join("") + "</div>";
+    }
+    var idx = STAGE_ORDER.indexOf(status); if (idx < 0) idx = 0;
+    return '<div class="stages">' + STAGE_LABELS.map(function (lab, i) {
+      var cls = i < idx ? "done" : (i === idx ? "current" : "");
+      return '<div class="stage ' + cls + '"><span class="dot"></span>' + esc(lab) + "</div>";
+    }).join("") + "</div>";
   }
 
   function showDash(data) {
@@ -117,6 +156,7 @@
       var card = document.createElement("div");
       card.className = "form-wrap applied-card";
       card.style.cssText = "margin:0 0 14px;padding:18px 20px";
+      var info = statusInfo(a.status);
       card.innerHTML =
         "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap'>" +
           "<div>" +
@@ -124,9 +164,10 @@
             "<div class='sub' style='margin:3px 0 0'>" + esc(a.department || "") +
               " · applied " + esc((a.submittedAt || "").slice(0, 10)) + "</div>" +
           "</div>" +
-          "<span class='status-pill " + statusClass(a.status) + "' style='font-size:13px;padding:5px 12px'>" + esc(a.status || "New") + "</span>" +
+          "<span class='status-pill " + info.cls + "' style='font-size:13px;padding:5px 12px'>" + esc(info.label) + "</span>" +
         "</div>" +
-        (rid ? "<div style='margin-top:14px'><a class='btn btn-outline' style='padding:7px 14px;font-size:13px' href='/#job=" + encodeURIComponent(rid) + "'>View role details</a></div>" : "");
+        stepperHtml(a.status) +
+        (rid ? "<div style='margin-top:16px'><a class='btn btn-outline' style='padding:7px 14px;font-size:13px' href='/#job=" + encodeURIComponent(rid) + "'>View role details</a></div>" : "");
       apps.appendChild(card);
     });
 
