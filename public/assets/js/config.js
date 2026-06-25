@@ -10,7 +10,7 @@ window.SFC_CONFIG = {
   tagline: "Join our team — fresh opportunities, every day.",
 
   // 1) Apps Script Web App URL (handles Sheet + email). See docs/GOOGLE_SETUP.md step 4.
-  API_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
+  API_URL: "https://script.google.com/macros/s/AKfycbz6glpI-X268CvFY527hvNZTSO3h40Yy-p6d6dre5n5CQZ4glmXZ3Ihn8U83yaCRBpI/exec",
 
   // 2) Google OAuth Client ID for admin "Sign in with Google". See docs/GOOGLE_SETUP.md step 6.
   GOOGLE_CLIENT_ID: "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE",
