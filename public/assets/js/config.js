@@ -393,7 +393,7 @@ window.SFC_clearToken = function () {
     if (!link) return;                       // only the public pages have this link
     var u = window.SFC_getUser();
     if (u && (u.firstName || u.email)) {
-      link.textContent = "Hi, " + (u.firstName || u.email);
+      link.textContent = "Applied jobs";
       if (!document.getElementById("nav-signout")) {
         var out = document.createElement("a");
         out.href = "#"; out.id = "nav-signout"; out.textContent = "Sign out";
