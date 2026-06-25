@@ -39,7 +39,7 @@
   <main class="container hidden" id="dash">
     <div class="section" style="padding-top:28px">
       <h2 id="greeting" style="margin:0 0 4px">Welcome back</h2>
-      <p class="sub" style="margin:0 0 24px">Track your applications and invite friends to apply.</p>
+      <p class="sub" id="dash-sub" style="margin:0 0 24px">Track your applications and invite friends to apply.</p>
 
       <!-- Referral card -->
       <div class="form-wrap" style="margin:0 0 24px">
@@ -52,7 +52,10 @@
       </div>
 
       <!-- Applications -->
-      <h3 id="apps-heading" style="margin:0 0 12px">Your applications</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px">
+        <h3 id="apps-heading" style="margin:0">Your applications</h3>
+        <button class="btn btn-outline" id="refresh-apps" type="button" style="padding:7px 14px;font-size:13px">↻ Refresh status</button>
+      </div>
       <div id="apps"></div>
     </div>
   </main>

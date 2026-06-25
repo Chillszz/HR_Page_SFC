@@ -76,6 +76,7 @@
     payload.submittedAt = new Date().toISOString();
     payload.turnstileToken = turnstileToken();   // verified server-side
     payload.referredBy = (window.SFC_getRef && window.SFC_getRef()) || "";   // friend referral, if any
+    payload.accountEmail = ((window.SFC_getUser && window.SFC_getUser()) || {}).email || "";  // links app to their dashboard
     // payload.website is the honeypot (should be empty); checked server-side.
 
     submitBtn.disabled = true;

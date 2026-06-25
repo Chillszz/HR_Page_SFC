@@ -88,6 +88,7 @@
     var who = document.getElementById("who");
     who.textContent = data.name || ""; who.classList.remove("hidden");
     document.getElementById("greeting").textContent = "Welcome" + (data.name ? ", " + data.name.split(" ")[0] : "") + " 👋";
+    document.getElementById("dash-sub").textContent = "Showing applications linked to " + (data.email || "your account") + ".";
 
     // Remember signed-in state so the public nav greets them on other pages.
     window.SFC_setUser({ email: data.email, name: data.name, firstName: (data.name || "").split(" ")[0] });
@@ -144,6 +145,14 @@
     var p = (window.SFC_POSITIONS || []).find(function (x) { return x.title === title; });
     return p ? p.id : null;
   }
+
+  /* ---- Refresh status without a full reload / re-login ---- */
+  document.getElementById("refresh-apps").addEventListener("click", function () {
+    var btn = this;
+    btn.disabled = true; var label = btn.textContent; btn.textContent = "Refreshing…";
+    loadSpace();
+    setTimeout(function () { btn.disabled = false; btn.textContent = label; }, 1200);
+  });
 
   /* ---- Copy referral link ---- */
   document.getElementById("copylink").addEventListener("click", function () {

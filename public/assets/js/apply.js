@@ -26,6 +26,20 @@
   var form = document.getElementById("apply-form");
   var alertBox = document.getElementById("alert");
 
+  // If they're signed in, prefill the email with their Google account so their
+  // application links to their dashboard (and status updates show up there).
+  var acct = window.SFC_getUser && window.SFC_getUser();
+  if (acct && acct.email) {
+    var emailInput = form.querySelector('input[name="email"]');
+    if (emailInput && !emailInput.value) {
+      emailInput.value = acct.email;
+      var hint = document.createElement("div");
+      hint.className = "hint";
+      hint.textContent = "Using your signed-in email so you can track this application.";
+      emailInput.parentNode.appendChild(hint);
+    }
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     alertBox.classList.add("hidden");

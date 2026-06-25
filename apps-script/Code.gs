@@ -53,7 +53,7 @@ var APPLICANT_COLUMNS = [
   "availability", "startDate", "referral",
   "address", "workAuth", "over18",
   "lastEmployer", "experience", "motivation", "days",
-  "referredBy",
+  "referredBy", "accountEmail",
   "lastActionBy", "lastActionAt"
 ];
 
@@ -193,12 +193,16 @@ function handleApplicantSpace(body) {
   var values = sheet.getDataRange().getValues();
   var headers = values.length ? values[0] : [];
   var emailCol = headers.indexOf("email");
+  var acctCol = headers.indexOf("accountEmail");
   var refByCol = headers.indexOf("referredBy");
+  var me = lc(user.email);
 
   var mine = [];
   var referralCount = 0;
   for (var r = 1; r < values.length; r++) {
-    if (emailCol > -1 && lc(values[r][emailCol]) === lc(user.email)) {
+    var rowMatches = (emailCol > -1 && lc(values[r][emailCol]) === me) ||
+                     (acctCol > -1 && lc(values[r][acctCol]) === me);
+    if (rowMatches) {
       var obj = {};
       for (var c = 0; c < headers.length; c++) obj[headers[c]] = values[r][c];
       mine.push({
