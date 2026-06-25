@@ -17,3 +17,7 @@ npm-debug.log*
 # Build output (if a build step is added later)
 dist/
 .wrangler/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
