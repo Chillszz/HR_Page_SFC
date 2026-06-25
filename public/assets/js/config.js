@@ -15,6 +15,10 @@ window.SFC_CONFIG = {
   // 2) Google OAuth Client ID for admin "Sign in with Google". See docs/GOOGLE_SETUP.md step 6.
   GOOGLE_CLIENT_ID: "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE",
 
+  // 3) Cloudflare Turnstile site key (anti-spam on the application form).
+  //    Leave blank to disable the captcha. See docs/GOOGLE_SETUP.md step 7.
+  TURNSTILE_SITE_KEY: "",
+
   // Where applicants land after submitting (kept on-site).
   // (No edits needed.)
 };

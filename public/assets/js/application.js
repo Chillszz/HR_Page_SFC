@@ -23,12 +23,40 @@
     alertBox.classList.remove("hidden");
   }
 
+  /* ---- Cloudflare Turnstile (only if a site key is configured) ---- */
+  var siteKey = (window.SFC_CONFIG && window.SFC_CONFIG.TURNSTILE_SITE_KEY) || "";
+  var turnstileId = null;
+  function renderTurnstile() {
+    if (!siteKey || turnstileId !== null || !window.turnstile) return;
+    document.getElementById("turnstile-box").classList.remove("hidden");
+    turnstileId = window.turnstile.render("#turnstile-widget", { sitekey: siteKey });
+  }
+  if (siteKey) {
+    var ts = setInterval(function () {
+      if (window.turnstile) { clearInterval(ts); renderTurnstile(); }
+    }, 100);
+  }
+  function turnstileToken() {
+    if (!siteKey || !window.turnstile || turnstileId === null) return "";
+    return window.turnstile.getResponse(turnstileId) || "";
+  }
+  function resetTurnstile() {
+    if (siteKey && window.turnstile && turnstileId !== null) window.turnstile.reset(turnstileId);
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     alertBox.classList.add("hidden");
 
     if (!form.checkValidity()) {
       form.reportValidity();
+      return;
+    }
+
+    // Require the captcha to pass if it's enabled.
+    if (siteKey && !turnstileToken()) {
+      showAlert("Please complete the verification check above before submitting.", false);
+      renderTurnstile();
       return;
     }
 
@@ -46,6 +74,8 @@
     var payload = Object.assign({ action: "apply" }, stage1, stage2);
     payload.days = Array.isArray(stage2.days) ? stage2.days.join(", ") : (stage2.days || "");
     payload.submittedAt = new Date().toISOString();
+    payload.turnstileToken = turnstileToken();   // verified server-side
+    // payload.website is the honeypot (should be empty); checked server-side.
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting…";
@@ -65,12 +95,20 @@
     })
       .then(function (r) { return r.json(); })
       .then(function (res) {
-        if (res && res.ok) { finishSuccess(); }
-        else { throw new Error((res && res.error) || "Submit failed"); }
+        if (res && res.ok) { finishSuccess(); return; }
+        if (res && res.duplicate) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit application";
+          resetTurnstile();
+          showAlert("It looks like you already applied for this role recently. We've got your application — no need to submit again.", false);
+          return;
+        }
+        throw new Error((res && res.error) || "Submit failed");
       })
       .catch(function (err) {
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit application";
+        resetTurnstile();
         showAlert("Sorry, something went wrong submitting your application. Please try again. (" + err.message + ")", false);
       });
   });

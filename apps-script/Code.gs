@@ -33,7 +33,14 @@ var CONFIG = {
   // OPTIONAL: separate, restricted spreadsheet for UICIS / government onboarding
   // data (gov ID numbers). Keep this Sheet shared ONLY with HR. Leave "" for now.
   UICIS_SPREADSHEET_ID: "",
-  UICIS_TAB: "UICIS_Restricted"
+  UICIS_TAB: "UICIS_Restricted",
+
+  // Cloudflare Turnstile secret key (anti-spam). Leave "" to skip captcha checks.
+  // Must pair with TURNSTILE_SITE_KEY in public/assets/js/config.js.
+  TURNSTILE_SECRET: "",
+
+  // Reject the same email applying to the same role within this many hours.
+  DEDUP_WINDOW_HOURS: 24
 };
 // ================================================================
 
@@ -69,7 +76,21 @@ function doGet() {
 
 /* ----------------------------- Applicants ----------------------------- */
 function handleApply(body) {
+  // 1) Honeypot — bots fill the hidden "website" field. Pretend success, drop it.
+  if (body.website) return { ok: true, id: "ignored" };
+
+  // 2) Cloudflare Turnstile — verify the captcha token if enabled.
+  if (CONFIG.TURNSTILE_SECRET && !verifyTurnstile(body.turnstileToken)) {
+    return { ok: false, error: "Verification failed. Please try again." };
+  }
+
   var sheet = getSheet(CONFIG.APPLICANTS_TAB, APPLICANT_COLUMNS);
+
+  // 3) Dedup — same email + same role within the configured window.
+  if (isDuplicate(sheet, body.email, body.positionId)) {
+    return { ok: false, duplicate: true, error: "Duplicate application" };
+  }
+
   var id = "APP-" + Utilities.getUuid().slice(0, 8).toUpperCase();
   var record = Object.assign({}, body, {
     id: id,
@@ -82,6 +103,40 @@ function handleApply(body) {
 
   sendNewApplicantEmail(record);
   return { ok: true, id: id };
+}
+
+function verifyTurnstile(token) {
+  if (!token) return false;
+  try {
+    var resp = UrlFetchApp.fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "post",
+      payload: { secret: CONFIG.TURNSTILE_SECRET, response: token },
+      muteHttpExceptions: true
+    });
+    var out = JSON.parse(resp.getContentText());
+    return out.success === true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function isDuplicate(sheet, email, positionId) {
+  if (!email) return false;
+  var values = sheet.getDataRange().getValues();
+  if (values.length < 2) return false;
+  var headers = values[0];
+  var emailCol = headers.indexOf("email");
+  var posCol = headers.indexOf("positionId");
+  var tsCol = headers.indexOf("submittedAt");
+  var cutoff = new Date().getTime() - (CONFIG.DEDUP_WINDOW_HOURS * 3600 * 1000);
+
+  for (var r = 1; r < values.length; r++) {
+    if (lc(values[r][emailCol]) !== lc(email)) continue;
+    if (String(values[r][posCol]) !== String(positionId)) continue;
+    var when = new Date(values[r][tsCol]).getTime();
+    if (!isNaN(when) && when >= cutoff) return true;
+  }
+  return false;
 }
 
 function handleList() {

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Application — Seafood City Careers</title>
   <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -40,6 +41,12 @@
              paperwork. UICIS is collected separately for HIRED
              candidates via a private link (see docs/ARCHITECTURE.md).
              ==================================================== -->
+
+        <!-- Honeypot: hidden from people, bots tend to fill it. Leave empty. -->
+        <div class="hp-field" aria-hidden="true">
+          <label>Website</label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
 
         <fieldset>
           <legend>Personal information</legend>
@@ -104,6 +111,12 @@
             <input type="checkbox" id="certify" required />
             <span>I certify that the information provided is true and complete to the best of my knowledge. <span class="req">*</span></span>
           </label>
+        </div>
+
+        <!-- Cloudflare Turnstile (anti-spam). Renders only when a site key is set
+             in config.js; mostly invisible. See docs/GOOGLE_SETUP.md. -->
+        <div id="turnstile-box" class="field hidden">
+          <div id="turnstile-widget"></div>
         </div>
 
         <div class="form-actions">

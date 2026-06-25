@@ -79,6 +79,26 @@ Now only the emails in `ADMIN_EMAILS` can sign in and load/modify applicants.
 
 ---
 
+## 3b. Spam protection (Cloudflare Turnstile)
+
+The application form already includes a hidden **honeypot** and a server-side
+**duplicate guard** (same email + same role within 24h is rejected) — both free
+and automatic. To also block bots with **Turnstile** (Cloudflare's invisible
+captcha, free):
+
+1. In the Cloudflare dashboard: **Turnstile → Add widget**.
+2. Name it (e.g. `Seafood City Careers`), add your site domain(s) including the
+   `*.pages.dev` preview, widget mode **Managed**. Create it.
+3. Copy the **Site Key** and **Secret Key**.
+4. Paste them in:
+   - `public/assets/js/config.js` → `TURNSTILE_SITE_KEY` (the Site Key)
+   - `apps-script/Code.gs` → `CONFIG.TURNSTILE_SECRET` (the Secret Key), then re-deploy a new version.
+
+Leave both blank to skip the captcha — the honeypot + dedup still run. Adjust
+the dedup window with `CONFIG.DEDUP_WINDOW_HOURS` in `Code.gs`.
+
+---
+
 ## 4. Host on Cloudflare Pages
 
 1. Push this repo to GitHub (already set up on branch `claude/hopeful-wright-8vz7zm`).

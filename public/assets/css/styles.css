@@ -149,6 +149,8 @@ fieldset legend { font-weight: 700; padding: 0 8px; color: var(--brand-dark); }
 .alert-ok { background: #eafaf0; border: 1px solid #b6e6c8; color: var(--ok); }
 .alert-err { background: #fdecea; border: 1px solid #f5c6c0; color: var(--danger); }
 .hidden { display: none !important; }
+/* Honeypot: visually removed but not display:none (so bots still see/fill it) */
+.hp-field { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 /* ---- Modal (approval popups) ---- */
 .modal-overlay { position: fixed; inset: 0; background: rgba(10,30,40,.55); display: grid; place-items: center; z-index: 100; }
