@@ -19,13 +19,16 @@
     }
     google.accounts.id.initialize({
       client_id: cfg.GOOGLE_CLIENT_ID,
-      callback: onCredential
+      callback: onCredential,
+      auto_select: true
     });
     // Render the button into the placeholder div.
     var btn = document.querySelector(".g_id_signin");
     if (btn) {
       google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "outline", shape: "pill" });
     }
+    // Returning HR on this device? Resume silently.
+    if (window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
 
   var currentName = "";

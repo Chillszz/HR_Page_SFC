@@ -11,9 +11,11 @@
   /* ---- Google Identity Services ---- */
   function initGoogle() {
     if (!window.google || !cfg.GOOGLE_CLIENT_ID || cfg.GOOGLE_CLIENT_ID.indexOf("PASTE_") === 0) return;
-    google.accounts.id.initialize({ client_id: cfg.GOOGLE_CLIENT_ID, callback: onCredential });
+    google.accounts.id.initialize({ client_id: cfg.GOOGLE_CLIENT_ID, callback: onCredential, auto_select: true });
     var btn = document.querySelector(".g_id_signin");
     if (btn) google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "filled_blue", shape: "pill" });
+    // Returning user on this device? Silently resume the session (no re-click).
+    if (window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
   function onCredential(resp) {
     idToken = resp.credential;
@@ -85,22 +87,47 @@
 
     // Applications
     var apps = document.getElementById("apps");
-    if (!data.applications || !data.applications.length) {
+    var heading = document.getElementById("apps-heading");
+    var n = (data.applications || []).length;
+
+    if (!n) {
+      heading.textContent = "Your applications";
       apps.innerHTML = '<div class="form-wrap" style="margin:0"><p class="sub" style="margin:0 0 14px">You haven\'t applied to a role yet.</p><a class="btn btn-primary" href="/">Browse open roles</a></div>';
       return;
     }
+
+    heading.textContent = "Your applications (" + n + ")";
     apps.innerHTML = "";
     data.applications.forEach(function (a) {
-      var row = document.createElement("div");
-      row.className = "form-wrap";
-      row.style.cssText = "margin:0 0 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 20px";
-      row.innerHTML =
-        "<div><div style='font-weight:700'>" + esc(a.positionTitle || "Role") + "</div>" +
-        "<div class='sub' style='margin:2px 0 0'>" + esc(a.department || "") +
-        " · applied " + esc((a.submittedAt || "").slice(0, 10)) + "</div></div>" +
-        '<span class="status-pill ' + statusClass(a.status) + '">' + esc(a.status || "New") + "</span>";
-      apps.appendChild(row);
+      var rid = roleIdByTitle(a.positionTitle);
+      var card = document.createElement("div");
+      card.className = "form-wrap applied-card";
+      card.style.cssText = "margin:0 0 14px;padding:18px 20px";
+      card.innerHTML =
+        "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap'>" +
+          "<div>" +
+            "<div style='font-size:18px;font-weight:800'>" + esc(a.positionTitle || "Role") + "</div>" +
+            "<div class='sub' style='margin:3px 0 0'>" + esc(a.department || "") +
+              " · applied " + esc((a.submittedAt || "").slice(0, 10)) + "</div>" +
+          "</div>" +
+          "<span class='status-pill " + statusClass(a.status) + "' style='font-size:13px;padding:5px 12px'>" + esc(a.status || "New") + "</span>" +
+        "</div>" +
+        (rid ? "<div style='margin-top:14px'><a class='btn btn-outline' style='padding:7px 14px;font-size:13px' href='/#job=" + encodeURIComponent(rid) + "'>View role details</a></div>" : "");
+      apps.appendChild(card);
     });
+
+    // Quick way to apply to another role.
+    var more = document.createElement("a");
+    more.className = "btn btn-primary";
+    more.href = "/";
+    more.textContent = "Apply to another role";
+    apps.appendChild(more);
+  }
+
+  // Match an application's role title back to a position id so we can link to it.
+  function roleIdByTitle(title) {
+    var p = (window.SFC_POSITIONS || []).find(function (x) { return x.title === title; });
+    return p ? p.id : null;
   }
 
   /* ---- Copy referral link ---- */
