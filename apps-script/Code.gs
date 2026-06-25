@@ -25,7 +25,7 @@ var CONFIG = {
   NOTIFY_EMAILS: "hr@seafoodcity.example",
 
   // OAuth Client ID — MUST match GOOGLE_CLIENT_ID in public/assets/js/config.js.
-  GOOGLE_CLIENT_ID: "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE",
+  GOOGLE_CLIENT_ID: "335125521257-btsi6j4iuqqbkaoqkqe6jbl9ngu8fef3.apps.googleusercontent.com",
 
   // Only these Google accounts may use the admin dashboard.
   ADMIN_EMAILS: ["hr@seafoodcity.example"],
