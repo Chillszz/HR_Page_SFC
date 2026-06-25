@@ -1,6 +1,14 @@
-# Cloudflare Pages — basic security headers (applied to all routes)
+# Security headers (applied by Cloudflare to all routes)
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Pages that use Google Sign-In need to allow the auth popup to talk back.
+# Without this, Chrome logs "Cross-Origin-Opener-Policy ... would block the
+# window.postMessage call" and the popup flow can misbehave.
+/admin/*
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+/me/*
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
