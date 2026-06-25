@@ -38,14 +38,31 @@
     enterDashboard();
   }
 
+  // After Google sign-in, verify the email is allowlisted (server-side).
+  // HR -> show the dashboard. Anyone else -> bounce back to the normal site,
+  // so non-HR never see that a portal exists here.
   function enterDashboard() {
+    if (notConfigured()) { showDashboard(); return; }   // demo mode: always show for testing
+    gate.querySelector("h1").textContent = "Signing in…";
+    api("admin_list").then(function (res) {
+      if (res.ok) {
+        applicants = res.applicants || [];
+        showDashboard(true);
+      } else {
+        // Not authorized — send them to the public careers site.
+        location.replace("/");
+      }
+    }).catch(function () { location.replace("/"); });
+  }
+
+  function showDashboard(alreadyLoaded) {
     gate.classList.add("hidden");
     dash.classList.remove("hidden");
     var who = document.getElementById("who");
     who.textContent = currentEmail || "";
     who.classList.remove("hidden");
     document.getElementById("signout").classList.remove("hidden");
-    loadApplicants();
+    if (alreadyLoaded) { render(); } else { loadApplicants(); }
   }
 
   document.getElementById("signout").addEventListener("click", function (e) {

@@ -38,11 +38,12 @@ cd public && python3 -m http.server 8000
   (stage 2) are marked as PLACEHOLDERS — swap them for your real ones. If you add
   a field, also add its name to `APPLICANT_COLUMNS` in `Code.gs` and to the Sheet
   header row so it's saved.
-- **Hidden HR portal:** there is no visible link to the dashboard. To open it,
-  **press & hold the logo for ~1 second** (mouse or touch), or go to the portal
-  path directly (`/admin/`, configurable as `PORTAL_PATH` in `config.js`). The
-  portal is `noindex` + blocked in `robots.txt` so search engines won't list it,
-  and access is still gated by Google sign-in + the email allowlist.
+- **HR portal access:** the public site has a neutral **"Sign in"** link. It goes
+  to `/admin/`, where the user signs in with Google. If their email is on the
+  `ADMIN_EMAILS` allowlist (in `apps-script/Code.gs`) they get the dashboard;
+  anyone else is bounced back to the public careers site and never sees the portal.
+  The portal is `noindex` + blocked in `robots.txt` so search engines won't list it.
+  To add/remove HR staff, edit `ADMIN_EMAILS` and redeploy the Apps Script.
 - **Branding/colors:** the `:root` block at the top of `public/assets/css/styles.css`
   (brand red is `--brand: #E11B22`, matching the Seafood City logo).
 - **Logo:** the official Seafood City logo lives at `public/assets/img/seafoodcity.png`

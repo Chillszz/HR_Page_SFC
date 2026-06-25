@@ -15,12 +15,6 @@ window.SFC_CONFIG = {
   // 2) Google OAuth Client ID for admin "Sign in with Google". See docs/GOOGLE_SETUP.md step 6.
   GOOGLE_CLIENT_ID: "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE",
 
-  // Hidden HR portal entrance. There is NO visible link to this on the public site —
-  // HR opens it by pressing & holding the logo for ~1 second (or visiting this path
-  // directly). For extra obscurity you can rename the public/admin folder to something
-  // non-obvious and update this path to match.
-  PORTAL_PATH: "/admin/",
-
   // Where applicants land after submitting (kept on-site).
   // (No edits needed.)
 };
