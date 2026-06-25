@@ -40,11 +40,10 @@ cd public && python3 -m http.server 8000
   header row so it's saved.
 - **Branding/colors:** the `:root` block at the top of `public/assets/css/styles.css`
   (brand red is `--brand: #E11B22`, matching the Seafood City logo).
-- **Logo:** drop the official Seafood City logo in at **`public/assets/img/logo.png`**
-  and every header switches to it automatically — no code change needed. Until that
-  file exists, the header falls back to a brand-red SVG diamond-fish mark
-  (`public/assets/img/logo-mark.svg`) plus a CSS wordmark. A wide horizontal lockup
-  works best; it's sized to ~42px tall.
+- **Logo:** the official Seafood City logo lives at `public/assets/img/seafoodcity.png`
+  and is shown in every header (sized to ~42px tall). To swap it, replace that file
+  (or change the `<img src>` in the page headers). If the image is ever missing, the
+  header falls back to a brand-red SVG diamond-fish mark (`logo-mark.svg`) + wordmark.
 
 ## Status
 Scaffold complete. Pending: real departments + form fields, and the separate
