@@ -351,3 +351,42 @@ window.SFC_findPosition = function (id) {
 window.SFC_getRef = function () {
   try { return localStorage.getItem("sfc_ref") || ""; } catch (e) { return ""; }
 };
+
+/* ------------------------------------------------------------
+   Signed-in display state (cosmetic only — real auth is always
+   re-verified server-side with a fresh Google token per request).
+   Lets the public nav greet the user by name across pages.
+   ------------------------------------------------------------ */
+window.SFC_setUser = function (u) {
+  try { localStorage.setItem("sfc_user", JSON.stringify(u || {})); } catch (e) {}
+};
+window.SFC_clearUser = function () {
+  try { localStorage.removeItem("sfc_user"); } catch (e) {}
+};
+window.SFC_getUser = function () {
+  try { return JSON.parse(localStorage.getItem("sfc_user") || "null"); } catch (e) { return null; }
+};
+
+(function () {
+  function paint() {
+    var link = document.querySelector('.nav-links a[href="/me/"]');
+    if (!link) return;                       // only the public pages have this link
+    var u = window.SFC_getUser();
+    if (u && (u.firstName || u.email)) {
+      link.textContent = "Hi, " + (u.firstName || u.email);
+      if (!document.getElementById("nav-signout")) {
+        var out = document.createElement("a");
+        out.href = "#"; out.id = "nav-signout"; out.textContent = "Sign out";
+        out.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.SFC_clearUser();
+          if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
+          location.reload();
+        });
+        link.parentNode.appendChild(out);
+      }
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paint);
+  else paint();
+})();

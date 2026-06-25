@@ -28,12 +28,15 @@
     }
   }
 
+  var currentName = "";
   function onCredential(resp) {
     idToken = resp.credential;
-    // Decode the email locally just for display; the BACKEND does real verification.
+    // Decode the email/name locally just for display; the BACKEND does real verification.
     try {
       var payload = JSON.parse(atob(idToken.split(".")[1]));
       currentEmail = payload.email;
+      currentName = payload.name || "";
+      window.SFC_setUser({ email: currentEmail, name: currentName, firstName: (currentName || "").split(" ")[0] });
     } catch (e) {}
     enterDashboard();
   }
@@ -68,8 +71,9 @@
   document.getElementById("signout").addEventListener("click", function (e) {
     e.preventDefault();
     idToken = null; currentEmail = null;
+    window.SFC_clearUser();
     if (window.google) google.accounts.id.disableAutoSelect();
-    location.reload();
+    location.href = "/";
   });
 
   // GIS loads async; poll briefly until ready.

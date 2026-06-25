@@ -27,8 +27,9 @@
   document.getElementById("signout").addEventListener("click", function (e) {
     e.preventDefault();
     idToken = null;
+    window.SFC_clearUser();
     if (window.google) google.accounts.id.disableAutoSelect();
-    location.reload();
+    location.href = "/";
   });
 
   /* ---- Load applicant space ---- */
@@ -70,6 +71,9 @@
     var who = document.getElementById("who");
     who.textContent = data.name || ""; who.classList.remove("hidden");
     document.getElementById("greeting").textContent = "Welcome" + (data.name ? ", " + data.name.split(" ")[0] : "") + " 👋";
+
+    // Remember signed-in state so the public nav greets them on other pages.
+    window.SFC_setUser({ email: data.email, name: data.name, firstName: (data.name || "").split(" ")[0] });
 
     // Referral link + count
     var link = location.origin + "/?ref=" + encodeURIComponent(data.referralCode || "");
