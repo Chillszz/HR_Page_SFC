@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Seafood City">
+  <!-- Brand red diamond -->
+  <rect x="17" y="17" width="66" height="66" rx="16" transform="rotate(45 50 50)" fill="#E11B22"/>
+  <!-- Stylized fish (white negative space), head to the left, sweeping fins to the right -->
+  <g fill="#ffffff">
+    <!-- body -->
+    <path d="M22 50
+             C 30 36, 46 32, 60 36
+             C 54 42, 52 46, 52 50
+             C 52 54, 54 58, 60 64
+             C 46 68, 30 64, 22 50 Z"/>
+    <!-- upper sweeping fin / tail -->
+    <path d="M58 37
+             C 70 33, 78 35, 84 40
+             C 76 41, 70 44, 66 49
+             C 64 44, 61 40, 58 37 Z"/>
+    <!-- lower sweeping fin / tail -->
+    <path d="M58 63
+             C 70 67, 78 65, 84 60
+             C 76 59, 70 56, 66 51
+             C 64 56, 61 60, 58 63 Z"/>
+    <!-- eye + accent dots -->
+    <circle cx="33" cy="47" r="2.6" fill="#E11B22"/>
+    <circle cx="41" cy="44" r="1.6" fill="#E11B22"/>
+  </g>
+</svg>

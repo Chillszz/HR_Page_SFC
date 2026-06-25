@@ -38,7 +38,12 @@ cd public && python3 -m http.server 8000
   (stage 2) are marked as PLACEHOLDERS — swap them for your real ones. If you add
   a field, also add its name to `APPLICANT_COLUMNS` in `Code.gs` and to the Sheet
   header row so it's saved.
-- **Branding/colors:** the `:root` block at the top of `public/assets/css/styles.css`.
+- **Branding/colors:** the `:root` block at the top of `public/assets/css/styles.css`
+  (brand red is `--brand: #E11B22`, matching the Seafood City logo).
+- **Logo:** the header uses `public/assets/img/logo-mark.svg` (a brand-red
+  diamond-fish mark) plus a CSS wordmark. To use the official artwork instead,
+  drop the real file in at `public/assets/img/logo-mark.svg` (or save it as
+  `logo-mark.png` and update the `<img src>` in the page headers).
 
 ## Status
 Scaffold complete. Pending: real departments + form fields, and the separate

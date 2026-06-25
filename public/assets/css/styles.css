@@ -3,19 +3,19 @@
    Edit colors in the :root block to rebrand.
    ============================================================ */
 :root {
-  --brand: #0a6e8c;        /* fresh teal/ocean */
-  --brand-dark: #064c61;
-  --brand-light: #e6f3f7;
-  --accent: #f2a900;       /* warm highlight */
-  --ink: #1c2b33;
-  --muted: #5c6b73;
-  --line: #dde6ea;
-  --bg: #f7fafb;
+  --brand: #E11B22;        /* Seafood City red */
+  --brand-dark: #B3141A;
+  --brand-light: #fdeaea;
+  --accent: #FFC72C;       /* warm gold highlight (used sparingly) */
+  --ink: #1f2326;
+  --muted: #6b7177;
+  --line: #e7e3e3;
+  --bg: #faf8f8;
   --white: #ffffff;
   --danger: #c0392b;
   --ok: #1e8449;
   --radius: 12px;
-  --shadow: 0 2px 12px rgba(6, 76, 97, 0.08);
+  --shadow: 0 2px 14px rgba(177, 20, 26, 0.08);
   --maxw: 1080px;
 }
 
@@ -41,8 +41,11 @@ a { color: var(--brand); }
   display: flex; align-items: center; justify-content: space-between;
   height: 64px;
 }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--brand-dark); text-decoration: none; font-size: 18px; }
-.brand .logo { width: 34px; height: 34px; border-radius: 8px; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 18px; }
+.brand { display: flex; align-items: center; gap: 11px; font-weight: 800; color: var(--brand); text-decoration: none; font-size: 18px; letter-spacing: .01em; }
+.brand .logo { width: 40px; height: 40px; display: block; }
+.brand .logo img, .brand .logo svg { width: 100%; height: 100%; display: block; }
+.brand .wordmark { line-height: 1; }
+.brand .wordmark small { display: block; font-size: 10px; font-weight: 700; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
 .nav-links a { margin-left: 18px; text-decoration: none; color: var(--muted); font-weight: 500; }
 .nav-links a:hover { color: var(--brand); }
 
@@ -61,8 +64,10 @@ a { color: var(--brand); }
   transition: transform .05s ease, background .15s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--accent); color: #2b1d00; }
-.btn-primary:hover { background: #ffba1a; }
+.btn-primary { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-gold { background: var(--accent); color: #3a2c00; }
+.btn-gold:hover { background: #ffd54f; }
 .btn-ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.6); }
 .btn-outline { background: #fff; color: var(--brand); border: 1.5px solid var(--brand); }
 .btn-block { display: block; width: 100%; text-align: center; }
@@ -111,7 +116,7 @@ a { color: var(--brand); }
 fieldset { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 22px; }
 fieldset legend { font-weight: 700; padding: 0 8px; color: var(--brand-dark); }
 
-.notice { background: var(--brand-light); border: 1px solid #bfe0ea; border-radius: 10px; padding: 14px 16px; font-size: 14px; color: var(--brand-dark); margin-bottom: 20px; }
+.notice { background: var(--brand-light); border: 1px solid #f6c9cb; border-radius: 10px; padding: 14px 16px; font-size: 14px; color: var(--brand-dark); margin-bottom: 20px; }
 .notice.warn { background: #fff7e6; border-color: #ffe1a6; color: #7a5a00; }
 
 /* ---- Alerts / status ---- */
@@ -136,7 +141,7 @@ table.data th, table.data td { text-align: left; padding: 12px 14px; border-bott
 table.data th { background: #f1f6f8; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
 table.data tr:hover td { background: #fafdfe; }
 .status-pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
-.status-new { background: #e6f3f7; color: var(--brand-dark); }
+.status-new { background: #eef1f4; color: #3f4a55; }
 .status-review { background: #fff7e6; color: #7a5a00; }
 .status-interview { background: #eef0ff; color: #3b3f9a; }
 .status-hired { background: #eafaf0; color: var(--ok); }
