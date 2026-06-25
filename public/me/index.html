@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>My Account — Seafood City Careers</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/"><img class="brand-logo" src="/assets/img/seafoodcity.png" alt="Seafood City" onerror="this.style.display='none';var b=this.parentNode;var t=b.querySelector('.brand-tag');if(t)t.style.display='none';var f=b.querySelector('.brand-fallback');if(f)f.style.display='flex'" /><span class="brand-tag">Careers</span><span class="brand-fallback" style="display:none"><span class="logo"><img src="/assets/img/logo-mark.svg" alt="Seafood City logo" /></span><span class="wordmark">SEAFOOD CITY<small>Supermarket · Careers</small></span></span></a>
+      <nav class="nav-links">
+        <a href="/">Open Roles</a>
+        <span id="who" class="hidden" style="color:var(--muted)"></span>
+        <a href="#" id="signout" class="hidden">Sign out</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Sign-in gate -->
+  <main class="container" id="gate">
+    <div class="form-wrap" style="text-align:center">
+      <h1>Your applications</h1>
+      <p class="sub">Sign in with Google to track your application and refer friends. You don't need an account to apply.</p>
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-shape="pill" style="display:inline-block;margin-top:8px"></div>
+      <p class="hint" style="color:var(--muted);font-size:13px;margin-top:18px">
+        New here? <a href="/">Browse open roles →</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- Applicant dashboard -->
+  <main class="container hidden" id="dash">
+    <div class="section" style="padding-top:28px">
+      <h2 id="greeting" style="margin:0 0 4px">Welcome back</h2>
+      <p class="sub" style="margin:0 0 24px">Track your applications and invite friends to apply.</p>
+
+      <!-- Referral card -->
+      <div class="form-wrap" style="margin:0 0 24px">
+        <h3 style="margin:0 0 6px">Refer a friend 🤝</h3>
+        <p class="sub" style="margin:0 0 14px" id="refcount">Share your personal link — when a friend applies through it, we'll know you sent them.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <input id="reflink" readonly style="flex:1;min-width:220px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fafafa" />
+          <button class="btn btn-primary" id="copylink" type="button">Copy link</button>
+        </div>
+      </div>
+
+      <!-- Applications -->
+      <h3 style="margin:0 0 12px">Your applications</h3>
+      <div id="apps"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container">© <span id="year"></span> Seafood City</div></footer>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/me.js"></script>
+</body>
+</html>

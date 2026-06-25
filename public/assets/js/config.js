@@ -339,3 +339,15 @@ window.SFC_POSITIONS = [
 window.SFC_findPosition = function (id) {
   return (window.SFC_POSITIONS || []).find(function (p) { return p.id === id; }) || null;
 };
+
+/* If someone arrives via a friend's referral link (?ref=CODE), remember it so
+   it can be attached when they submit an application. */
+(function () {
+  try {
+    var ref = new URLSearchParams(location.search).get("ref");
+    if (ref) localStorage.setItem("sfc_ref", ref);
+  } catch (e) { /* ignore */ }
+})();
+window.SFC_getRef = function () {
+  try { return localStorage.getItem("sfc_ref") || ""; } catch (e) { return ""; }
+};

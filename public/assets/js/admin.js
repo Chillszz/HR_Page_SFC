@@ -49,10 +49,10 @@
         applicants = res.applicants || [];
         showDashboard(true);
       } else {
-        // Not authorized — send them to the public careers site.
-        location.replace("/");
+        // Not HR — send them to their applicant dashboard instead.
+        location.replace("/me/");
       }
-    }).catch(function () { location.replace("/"); });
+    }).catch(function () { location.replace("/me/"); });
   }
 
   function showDashboard(alreadyLoaded) {

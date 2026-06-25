@@ -75,6 +75,7 @@
     payload.days = Array.isArray(stage2.days) ? stage2.days.join(", ") : (stage2.days || "");
     payload.submittedAt = new Date().toISOString();
     payload.turnstileToken = turnstileToken();   // verified server-side
+    payload.referredBy = (window.SFC_getRef && window.SFC_getRef()) || "";   // friend referral, if any
     // payload.website is the honeypot (should be empty); checked server-side.
 
     submitBtn.disabled = true;

@@ -20,6 +20,7 @@ var CONFIG = {
   // Tab names inside that spreadsheet.
   APPLICANTS_TAB: "Applicants",
   AUDIT_TAB: "Activity Log",
+  REFERRERS_TAB: "Referrers",
 
   // Who gets the "new applicant" email (comma-separated).
   NOTIFY_EMAILS: "hr@seafoodcity.example",
@@ -52,6 +53,7 @@ var APPLICANT_COLUMNS = [
   "availability", "startDate", "referral",
   "address", "workAuth", "over18",
   "lastEmployer", "experience", "motivation", "days",
+  "referredBy",
   "lastActionBy", "lastActionAt"
 ];
 
@@ -59,10 +61,11 @@ function doPost(e) {
   try {
     var body = JSON.parse(e.postData.contents || "{}");
     switch (body.action) {
-      case "apply":        return json(handleApply(body));
-      case "admin_list":   return json(requireAdmin(body, handleList));
-      case "admin_update": return json(requireAdmin(body, function (u) { return handleUpdate(body, u); }));
-      default:             return json({ ok: false, error: "Unknown action" });
+      case "apply":           return json(handleApply(body));
+      case "applicant_space": return json(handleApplicantSpace(body));
+      case "admin_list":      return json(requireAdmin(body, handleList));
+      case "admin_update":    return json(requireAdmin(body, function (u) { return handleUpdate(body, u); }));
+      default:                return json({ ok: false, error: "Unknown action" });
     }
   } catch (err) {
     return json({ ok: false, error: String(err) });
@@ -95,14 +98,33 @@ function handleApply(body) {
   var record = Object.assign({}, body, {
     id: id,
     submittedAt: body.submittedAt || new Date().toISOString(),
-    status: "New"
+    status: "New",
+    referredBy: body.referredBy || ""   // referral code from a friend's link, if any
   });
 
-  var row = APPLICANT_COLUMNS.map(function (c) { return record[c] != null ? record[c] : ""; });
-  sheet.appendRow(row);
+  appendRecord(sheet, record);   // header-aware: auto-adds new columns like referredBy
 
   sendNewApplicantEmail(record);
   return { ok: true, id: id };
+}
+
+/* Append a record using the sheet's CURRENT header row. Any key not yet a
+   column is added as a new header column, so the schema self-extends and we
+   never have to hand-edit the sheet when new fields appear. */
+function appendRecord(sheet, record) {
+  var lastCol = Math.max(sheet.getLastColumn(), 1);
+  var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0]
+    .filter(function (h) { return h !== "" && h != null; });
+
+  Object.keys(record).forEach(function (k) {
+    if (headers.indexOf(k) === -1) {
+      headers.push(k);
+      sheet.getRange(1, headers.length).setValue(k);   // add the new header
+    }
+  });
+
+  var row = headers.map(function (h) { return record[h] != null ? record[h] : ""; });
+  sheet.appendRow(row);
 }
 
 function verifyTurnstile(token) {
@@ -152,6 +174,64 @@ function handleList() {
   }
   applicants.reverse(); // newest first
   return { ok: true, applicants: applicants };
+}
+
+/* ----------------------------- Applicant space ----------------------------- */
+// Powers the optional applicant dashboard (/me/). Requires Google sign-in.
+// Returns whether they're HR, their own applications, and their referral info.
+function handleApplicantSpace(body) {
+  var user = verifyGoogleToken(body.idToken);
+  if (!user) return { ok: false, error: "Sign-in required" };
+
+  var isAdmin = CONFIG.ADMIN_EMAILS.map(lc).indexOf(lc(user.email)) !== -1;
+  var myCode = referralCode(user.email);
+
+  // Remember this person's code -> name/email so HR can resolve referrals.
+  logReferrer(myCode, user.name, user.email);
+
+  var sheet = getSheet(CONFIG.APPLICANTS_TAB, APPLICANT_COLUMNS);
+  var values = sheet.getDataRange().getValues();
+  var headers = values.length ? values[0] : [];
+  var emailCol = headers.indexOf("email");
+  var refByCol = headers.indexOf("referredBy");
+
+  var mine = [];
+  var referralCount = 0;
+  for (var r = 1; r < values.length; r++) {
+    if (emailCol > -1 && lc(values[r][emailCol]) === lc(user.email)) {
+      var obj = {};
+      for (var c = 0; c < headers.length; c++) obj[headers[c]] = values[r][c];
+      mine.push({
+        id: obj.id, positionTitle: obj.positionTitle, department: obj.department,
+        submittedAt: obj.submittedAt, status: obj.status
+      });
+    }
+    if (refByCol > -1 && String(values[r][refByCol]) === myCode) referralCount++;
+  }
+  mine.reverse();
+
+  return {
+    ok: true, isAdmin: isAdmin, email: user.email, name: user.name || "",
+    referralCode: myCode, referralCount: referralCount, applications: mine
+  };
+}
+
+// Deterministic short code from an email (same person -> same code).
+function referralCode(email) {
+  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, lc(email));
+  var hex = bytes.map(function (b) { return ("0" + (b & 0xff).toString(16)).slice(-2); }).join("");
+  return "R-" + hex.slice(0, 8).toUpperCase();
+}
+
+function logReferrer(code, name, email) {
+  try {
+    var sheet = getSheet(CONFIG.REFERRERS_TAB, ["code", "name", "email", "firstSeen"]);
+    var values = sheet.getDataRange().getValues();
+    for (var r = 1; r < values.length; r++) {
+      if (String(values[r][0]) === code) return; // already recorded
+    }
+    sheet.appendRow([code, name || "", email, new Date().toISOString()]);
+  } catch (e) { /* non-fatal */ }
 }
 
 function handleUpdate(body, user) {
