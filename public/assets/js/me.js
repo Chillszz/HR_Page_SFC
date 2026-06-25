@@ -17,11 +17,9 @@
   /* ---- Google Identity Services ---- */
   function initGoogle() {
     if (!window.google || !cfg.GOOGLE_CLIENT_ID || cfg.GOOGLE_CLIENT_ID.indexOf("PASTE_") === 0) return;
-    google.accounts.id.initialize({ client_id: cfg.GOOGLE_CLIENT_ID, callback: onCredential, auto_select: true });
+    google.accounts.id.initialize({ client_id: cfg.GOOGLE_CLIENT_ID, callback: onCredential });
     var btn = document.querySelector(".g_id_signin");
     if (btn) google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "filled_blue", shape: "pill" });
-    // No valid saved token but they've signed in before? Try a silent resume.
-    if (!saved && window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
   function onCredential(resp) {
     idToken = resp.credential;

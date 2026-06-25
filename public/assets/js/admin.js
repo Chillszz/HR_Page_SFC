@@ -19,16 +19,13 @@
     }
     google.accounts.id.initialize({
       client_id: cfg.GOOGLE_CLIENT_ID,
-      callback: onCredential,
-      auto_select: true
+      callback: onCredential
     });
     // Render the button into the placeholder div.
     var btn = document.querySelector(".g_id_signin");
     if (btn) {
       google.accounts.id.renderButton(btn, { type: "standard", size: "large", theme: "outline", shape: "pill" });
     }
-    // No valid saved token but signed in before? Try a silent resume.
-    if (!window.SFC_getToken() && window.SFC_getUser && window.SFC_getUser()) google.accounts.id.prompt();
   }
 
   var currentName = "";
