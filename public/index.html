@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Careers — Seafood City</title>
+  <meta name="description" content="Open positions at Seafood City. Apply online in minutes." />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/">
+        <span class="logo">🐟</span>
+        <span>Seafood City <span style="font-weight:500;color:var(--muted)">Careers</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Open Roles</a>
+        <a href="/admin/">HR Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Find your spot at Seafood City</h1>
+      <p id="tagline">Browse open positions below and apply online — no paper, no waiting in line.</p>
+    </div>
+  </section>
+
+  <main class="section">
+    <div class="container">
+      <h2>Open positions</h2>
+      <p class="sub">Pick a department, then hit Apply to get started.</p>
+
+      <div class="filters">
+        <input type="search" id="search" placeholder="Search roles…" />
+        <select id="dept-filter"><option value="">All departments</option></select>
+        <select id="type-filter">
+          <option value="">All types</option>
+          <option>Full-time</option>
+          <option>Part-time</option>
+        </select>
+      </div>
+
+      <div class="job-grid" id="job-grid"><!-- rendered by main.js --></div>
+      <p id="empty" class="sub hidden">No roles match your search right now.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      © <span id="year"></span> Seafood City · Careers portal
+    </div>
+  </footer>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application — Seafood City Careers</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/"><span class="logo">🐟</span><span>Seafood City <span style="font-weight:500;color:var(--muted)">Careers</span></span></a>
+      <nav class="nav-links"><a href="/">Open Roles</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-wrap">
+      <div class="steps"><span class="step-dot active"></span><span class="step-dot active"></span></div>
+
+      <h1>Complete your application</h1>
+      <p class="sub" id="for-line">Step 2 of 2</p>
+
+      <div id="alert" class="alert hidden"></div>
+
+      <!-- Shown after a successful submit -->
+      <div id="success" class="hidden">
+        <div class="alert alert-ok">
+          <strong>Application received! 🎉</strong><br />
+          Thanks for applying to Seafood City. Our HR team will review your application and reach out about next steps.
+        </div>
+        <a class="btn btn-primary" href="/">Back to open roles</a>
+      </div>
+
+      <form id="app-form" novalidate>
+        <!-- ====================================================
+             STAGE 2 — the full application. PLACEHOLDER SECTIONS.
+             Replace fields with the exact ones from your packet.
+             NOTE: This is the APPLICATION, not the UICIS/onboarding
+             paperwork. UICIS is collected separately for HIRED
+             candidates via a private link (see docs/ARCHITECTURE.md).
+             ==================================================== -->
+
+        <fieldset>
+          <legend>Personal information</legend>
+          <div class="field">
+            <label>Full mailing address</label>
+            <input name="address" placeholder="Street, City, State, ZIP" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Legally authorized to work in the U.S.? <span class="req">*</span></label>
+              <select name="workAuth" required>
+                <option value="">Select…</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Are you 18 or older? <span class="req">*</span></label>
+              <select name="over18" required>
+                <option value="">Select…</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Experience</legend>
+          <div class="field">
+            <label>Most recent employer</label>
+            <input name="lastEmployer" />
+          </div>
+          <div class="field">
+            <label>Relevant experience</label>
+            <textarea name="experience" rows="4" placeholder="Briefly describe any related work experience."></textarea>
+          </div>
+          <div class="field">
+            <label>Why do you want to work at Seafood City?</label>
+            <textarea name="motivation" rows="3"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Availability</legend>
+          <div class="field">
+            <label>Which days can you work?</label>
+            <div style="display:flex;flex-wrap:wrap;gap:14px">
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Mon" /> Mon</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Tue" /> Tue</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Wed" /> Wed</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Thu" /> Thu</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Fri" /> Fri</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Sat" /> Sat</label>
+              <label class="checkbox-row"><input type="checkbox" name="days" value="Sun" /> Sun</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="checkbox-row">
+            <input type="checkbox" id="certify" required />
+            <span>I certify that the information provided is true and complete to the best of my knowledge. <span class="req">*</span></span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <a class="btn btn-outline" href="/apply.html">← Back</a>
+          <button class="btn btn-primary" id="submit-btn" type="submit">Submit application</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container">© <span id="year"></span> Seafood City</div></footer>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/application.js"></script>
+</body>
+</html>

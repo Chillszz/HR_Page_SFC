@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (only if you later add tooling)
+node_modules/
+npm-debug.log*
+
+# Local env / secrets — never commit real keys
+.env
+.env.local
+*.local
+
+# Build output (if a build step is added later)
+dist/
+.wrangler/

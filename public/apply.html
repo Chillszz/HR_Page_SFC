@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply — Seafood City Careers</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/"><span class="logo">🐟</span><span>Seafood City <span style="font-weight:500;color:var(--muted)">Careers</span></span></a>
+      <nav class="nav-links"><a href="/">Open Roles</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-wrap">
+      <!-- Step indicator: Step 1 of 2 -->
+      <div class="steps"><span class="step-dot active"></span><span class="step-dot"></span></div>
+
+      <h1>Apply for <span id="job-title">a role</span></h1>
+      <p class="sub">Step 1 of 2 — quick info. This replaces the sign-in sheet at the stand.</p>
+
+      <div id="alert" class="alert alert-err hidden"></div>
+
+      <form id="apply-form" novalidate>
+        <!-- ====================================================
+             STAGE 1 — "the stand paper". PLACEHOLDER FIELDS.
+             Replace with the exact fields from your physical form.
+             ==================================================== -->
+        <div class="field-row">
+          <div class="field">
+            <label>First name <span class="req">*</span></label>
+            <input name="firstName" required />
+          </div>
+          <div class="field">
+            <label>Last name <span class="req">*</span></label>
+            <input name="lastName" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label>Phone <span class="req">*</span></label>
+            <input name="phone" type="tel" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Position applying for <span class="req">*</span></label>
+          <select name="positionId" id="position-select" required></select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Earliest start date</label>
+            <input name="startDate" type="date" />
+          </div>
+          <div class="field">
+            <label>Availability</label>
+            <select name="availability">
+              <option value="">Select…</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Weekends only</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>How did you hear about us?</label>
+          <input name="referral" placeholder="In-store stand, friend, social media…" />
+        </div>
+
+        <div class="form-actions">
+          <a class="btn btn-outline" href="/">Cancel</a>
+          <button class="btn btn-primary" type="submit">Continue to application →</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container">© <span id="year"></span> Seafood City</div></footer>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/apply.js"></script>
+</body>
+</html>

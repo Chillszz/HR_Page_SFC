@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HR Dashboard — Seafood City Careers</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/"><span class="logo">🐟</span><span>Seafood City <span style="font-weight:500;color:var(--muted)">HR</span></span></a>
+      <nav class="nav-links">
+        <span id="who" class="hidden" style="color:var(--muted)"></span>
+        <a href="#" id="signout" class="hidden">Sign out</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Sign-in gate -->
+  <main class="container" id="gate">
+    <div class="form-wrap" style="text-align:center">
+      <h1>HR sign in</h1>
+      <p class="sub">Restricted to authorized Seafood City HR accounts.</p>
+      <div id="g_id_onload"
+           data-auto_prompt="false"></div>
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-shape="pill" style="display:inline-block;margin-top:8px"></div>
+      <div id="gate-alert" class="alert alert-err hidden" style="margin-top:18px"></div>
+      <p class="hint" style="color:var(--muted);font-size:13px;margin-top:18px">
+        Don't see a sign-in button? The Google Client ID isn't configured yet — see <code>docs/GOOGLE_SETUP.md</code>.
+      </p>
+    </div>
+  </main>
+
+  <!-- Dashboard -->
+  <main class="container hidden" id="dash">
+    <div class="admin-bar">
+      <div>
+        <h2 style="margin:0">Applicants</h2>
+        <p class="sub" style="margin:2px 0 0">Review, advance, or decline candidates.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <select id="status-filter">
+          <option value="">All statuses</option>
+          <option value="New">New</option>
+          <option value="In Review">In Review</option>
+          <option value="Interview">Interview</option>
+          <option value="Hired">Hired</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <button class="btn btn-outline" id="refresh">Refresh</button>
+      </div>
+    </div>
+
+    <div id="dash-alert" class="alert hidden"></div>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Applied</th><th>Name</th><th>Position</th><th>Dept</th>
+            <th>Contact</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="7" style="padding:24px;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Multi-step approval modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-step" id="modal-step">Confirm</div>
+      <h3 id="modal-title">Are you sure?</h3>
+      <p id="modal-body"></p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="modal-confirm">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer"><div class="container">© <span id="year"></span> Seafood City · HR only</div></footer>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/assets/js/admin.js"></script>
+</body>
+</html>
